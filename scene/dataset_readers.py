@@ -253,7 +253,7 @@ def readNerfSyntheticInfo(path, white_background, eval, extension=".png"):
                            ply_path=ply_path)
     return scene_info
 
-def readGazeboSyntheticInfo(path,eval,extension='.png'):
+def readGazeboSyntheticInfo(path,eval,extension=''):
     print("Reading Training Transforms")
     train_cam_infos = readCamerasFromTransforms(path, "transforms.json", True, extension)
     
