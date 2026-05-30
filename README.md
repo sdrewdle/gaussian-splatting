@@ -1,6 +1,9 @@
 # About this fork of 3D Gaussian Splatting
 I really only made this fork b/c I cannot run CUDA on my laptop. So, I gotta run it some other way and Colab I guess is the way. This has also been made solely for the purposes of testing out images captured from a turtlebot in simulation :/
 
+## How I intend to be running this
+Jumping off of Github user @YassGan's fix [here](https://github.com/YassGan/3DGaussianSplatting-INRIA-Method-Colab.git), I will be updating this fork and pointing to it by changing the cell where it is originally cloned from. 
+
 # 3D Gaussian Splatting for Real-Time Radiance Field Rendering
 Bernhard Kerbl*, Georgios Kopanas*, Thomas Leimkühler, George Drettakis (* indicates equal contribution)<br>
 | [Webpage](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/) | [Full Paper](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/3d_gaussian_splatting_high.pdf) |
