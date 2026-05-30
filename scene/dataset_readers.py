@@ -181,7 +181,11 @@ def readCamerasFromTransforms(path, transformsfile, white_background, extension=
 
     with open(os.path.join(path, transformsfile)) as json_file:
         contents = json.load(json_file)
-        fovx = contents["camera_angle_x"]
+        try:
+            fovx = contents["camera_angle_x"]
+        except:
+            fovx = 2*np.arctan(int(contents["w"]) / (2*float(contents["fl_x"])))
+            print(f'Had to derive camera_angle_x as {fovx}')
 
         frames = contents["frames"]
         for idx, frame in enumerate(frames):
@@ -249,7 +253,12 @@ def readNerfSyntheticInfo(path, white_background, eval, extension=".png"):
                            ply_path=ply_path)
     return scene_info
 
+def readGazeboSyntheticInfo(path,eval,extension='.png'):
+    train_cam_info = (path, 'transforms.json')
+    pass
+
 sceneLoadTypeCallbacks = {
     "Colmap": readColmapSceneInfo,
-    "Blender" : readNerfSyntheticInfo
+    "Blender" : readNerfSyntheticInfo,
+    "Gazebo" : readNerfSyntheticInfo
 }
