@@ -254,11 +254,10 @@ def readNerfSyntheticInfo(path, white_background, eval, extension=".png"):
     return scene_info
 
 def readGazeboSyntheticInfo(path,eval,extension='.png'):
-    train_cam_info = (path, 'transforms.json')
-    pass
+    return readNerfSyntheticInfo(path, white_background=False, eval=eval)
 
 sceneLoadTypeCallbacks = {
     "Colmap": readColmapSceneInfo,
     "Blender" : readNerfSyntheticInfo,
-    "Gazebo" : readNerfSyntheticInfo
+    "Gazebo" : readGazeboSyntheticInfo
 }
