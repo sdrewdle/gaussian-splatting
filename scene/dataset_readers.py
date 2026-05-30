@@ -112,6 +112,24 @@ def fetchPly(path):
     normals = np.vstack([vertices['nx'], vertices['ny'], vertices['nz']]).T
     return BasicPointCloud(points=positions, colors=colors, normals=normals)
 
+def fetchPly_BW(path):
+    plydata = PlyData.read(path)
+    vertices = plydata['vertex']
+    positions = np.vstack([vertices['x'], vertices['y'], vertices['z']]).T
+
+    # randomly initialize colors
+    colors = np.random.random(size=(
+        len(vertices),
+        3
+        ))/4 + 0.5
+
+    # initialize normals to 0's (like in random init)
+    normals = np.zeros(( 
+        len(vertices),
+        3 
+    ))
+    return BasicPointCloud(points=positions, colors=colors, normals=normals)
+
 def storePly(path, xyz, rgb):
     # Define the dtype for the structured array
     dtype = [('x', 'f4'), ('y', 'f4'), ('z', 'f4'),
@@ -274,7 +292,7 @@ def readGazeboSyntheticInfo(path,eval,extension=''):
 
         storePly(ply_path, xyz, SH2RGB(shs) * 255)
     try:
-        pcd = fetchPly(ply_path)
+        pcd = fetchPly_BW(ply_path)
     except:
         pcd = None
 
