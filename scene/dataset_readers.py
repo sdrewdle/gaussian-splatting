@@ -254,7 +254,36 @@ def readNerfSyntheticInfo(path, white_background, eval, extension=".png"):
     return scene_info
 
 def readGazeboSyntheticInfo(path,eval,extension='.png'):
-    return readNerfSyntheticInfo(path, white_background=False, eval=eval)
+    print("Reading Training Transforms")
+    train_cam_infos = readCamerasFromTransforms(path, "transforms.json", True, extension)
+    
+    nerf_normalization = getNerfppNorm(train_cam_infos)
+
+    # pointing to point cloud
+    ply_path = os.path.join(path, "lidar/lidar_points_world.ply")
+    if not os.path.exists(ply_path):
+        # If this data set has no colmap data, and no
+        # lidar points, we start with random points
+        num_pts = 100_000
+        print(f"Generating random point cloud ({num_pts})...")
+        
+        # We create random points inside the bounds of the synthetic Blender scenes
+        xyz = np.random.random((num_pts, 3)) * 2.6 - 1.3
+        shs = np.random.random((num_pts, 3)) / 255.0
+        pcd = BasicPointCloud(points=xyz, colors=SH2RGB(shs), normals=np.zeros((num_pts, 3)))
+
+        storePly(ply_path, xyz, SH2RGB(shs) * 255)
+    try:
+        pcd = fetchPly(ply_path)
+    except:
+        pcd = None
+
+    scene_info = SceneInfo(point_cloud=pcd,
+                           train_cameras=train_cam_infos,
+                           test_cameras=[],
+                           nerf_normalization=nerf_normalization,
+                           ply_path=ply_path)
+    return scene_info
 
 sceneLoadTypeCallbacks = {
     "Colmap": readColmapSceneInfo,
