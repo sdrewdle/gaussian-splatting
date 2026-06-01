@@ -28,7 +28,8 @@ class Scene:
                  load_iteration=None, 
                  shuffle=True, 
                  resolution_scales=[1.0],
-                 init_gaussians_random = False):
+                 init_gaussians_random = False,
+                 test_path=None):
         """b
         :param path: Path to colmap scene main folder.
         """
@@ -56,7 +57,8 @@ class Scene:
             print("Found transforms.json file, assuming Gazebo data set!")
             scene_info = sceneLoadTypeCallbacks["Gazebo"](args.source_path, 
                                                           args.eval, 
-                                                          init_random = init_gaussians_random)
+                                                          init_random = init_gaussians_random,
+                                                          test_path=test_path)
         else:
             assert False, "Could not recognize scene type."
 

@@ -34,11 +34,14 @@ def training(dataset, opt, pipe,
              checkpoint_iterations, 
              checkpoint, 
              debug_from,
-             init_gaussians_random=False):
+             init_gaussians_random=False,
+             test_path=None):
     first_iter = 0
     tb_writer = prepare_output_and_logger(dataset)
     gaussians = GaussianModel(dataset.sh_degree)
-    scene = Scene(dataset, gaussians, init_gaussians_random=init_gaussians_random)
+    scene = Scene(dataset, gaussians, 
+                  init_gaussians_random=init_gaussians_random,
+                  test_path=test_path)
     gaussians.training_setup(opt)
     if checkpoint:
         (model_params, first_iter) = torch.load(checkpoint)
@@ -209,6 +212,7 @@ if __name__ == "__main__":
     parser.add_argument("--quiet", action="store_true")
     parser.add_argument("--checkpoint_iterations", nargs="+", type=int, default=[])
     parser.add_argument("--start_checkpoint", type=str, default = None)
+    parser.add_argument("--test_path", default=None)
     args = parser.parse_args(sys.argv[1:])
     args.save_iterations.append(args.iterations)
     
@@ -228,7 +232,8 @@ if __name__ == "__main__":
              args.checkpoint_iterations, 
              args.start_checkpoint, 
              args.debug_from,
-             init_gaussians_random = args.init_gaussians_random)
+             init_gaussians_random = args.init_gaussians_random,
+             test_path=args.test_path)
 
     # All done
     print("\nTraining complete.")

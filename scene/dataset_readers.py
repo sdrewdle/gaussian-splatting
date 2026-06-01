@@ -272,10 +272,13 @@ def readNerfSyntheticInfo(path, white_background, eval, extension=".png"):
                            ply_path=ply_path)
     return scene_info
 
-def readGazeboSyntheticInfo(path,eval,extension='', init_random=False):
+def readGazeboSyntheticInfo(path,eval,extension='', init_random=False,
+                            test_path = None):
     print("Reading Training Transforms")
     train_cam_infos = readCamerasFromTransforms(path, "transforms.json", True, extension)
-    
+    test_cam_infos=[]
+    if test_path is not None:
+        test_cam_infos = readCamerasFromTransforms(test_path,'transforms.json', True, extension)
     nerf_normalization = getNerfppNorm(train_cam_infos)
 
     # pointing to point cloud
@@ -300,7 +303,7 @@ def readGazeboSyntheticInfo(path,eval,extension='', init_random=False):
 
     scene_info = SceneInfo(point_cloud=pcd,
                            train_cameras=train_cam_infos,
-                           test_cameras=[],
+                           test_cameras=test_cam_infos,
                            nerf_normalization=nerf_normalization,
                            ply_path=ply_path)
     return scene_info
