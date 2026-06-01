@@ -276,6 +276,8 @@ def readGazeboSyntheticInfo(path,eval,extension='', init_random=False,
                             test_path = None):
     print("Reading Training Transforms")
     train_cam_infos = readCamerasFromTransforms(path, "transforms.json", True, extension)
+    print(f'Train Path: {path}')
+    print(f'Test Path: {test_path}')
     test_cam_infos=[]
     if test_path is not None:
         test_cam_infos = readCamerasFromTransforms(test_path,'transforms.json', True, extension)
