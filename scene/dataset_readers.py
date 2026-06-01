@@ -286,6 +286,7 @@ def readGazeboSyntheticInfo(path,eval,extension='', init_random=False,
     # pointing to point cloud
     ply_path = os.path.join(path, "lidar/lidar_points_world.ply")
     if init_random or not os.path.exists(ply_path):
+        ply_path = os.path.join(path,"lidar/lidar_points_world_random.ply")
         # If this data set has no colmap data, and no
         # lidar points, we start with random points
         num_pts = 100_000
@@ -297,11 +298,11 @@ def readGazeboSyntheticInfo(path,eval,extension='', init_random=False,
         pcd = BasicPointCloud(points=xyz, colors=SH2RGB(shs), normals=np.zeros((num_pts, 3)))
 
         storePly(ply_path, xyz, SH2RGB(shs) * 255)
-    else:
-        try:
-            pcd = fetchPly_BW(ply_path)
-        except:
-            pcd = None
+
+    try:
+        pcd = fetchPly_BW(ply_path)
+    except:
+        pcd = None
 
     scene_info = SceneInfo(point_cloud=pcd,
                            train_cameras=train_cam_infos,
