@@ -48,7 +48,9 @@ class Scene:
         # attempt: adding support for Gazebo
         elif os.path.exists(os.path.join(args.source_path, "transforms.json")):
             print("Found transforms.json file, assuming Gazebo data set!")
-            scene_info = sceneLoadTypeCallbacks["Gazebo"](args.source_path, args.eval)
+            scene_info = sceneLoadTypeCallbacks["Gazebo"](args.source_path, 
+                                                          args.eval, 
+                                                          init_random = args.init_gaussians_random)
         else:
             assert False, "Could not recognize scene type."
 

@@ -147,7 +147,7 @@ def storePly(path, xyz, rgb):
     ply_data = PlyData([vertex_element])
     ply_data.write(path)
 
-def readColmapSceneInfo(path, images, eval, llffhold=8):
+def readColmapSceneInfo(path, images, eval, llffhold=8, init_random=False):
     try:
         cameras_extrinsic_file = os.path.join(path, "sparse/0", "images.bin")
         cameras_intrinsic_file = os.path.join(path, "sparse/0", "cameras.bin")
@@ -182,6 +182,7 @@ def readColmapSceneInfo(path, images, eval, llffhold=8):
         except:
             xyz, rgb, _ = read_points3D_text(txt_path)
         storePly(ply_path, xyz, rgb)
+    
     try:
         pcd = fetchPly(ply_path)
     except:
@@ -271,7 +272,7 @@ def readNerfSyntheticInfo(path, white_background, eval, extension=".png"):
                            ply_path=ply_path)
     return scene_info
 
-def readGazeboSyntheticInfo(path,eval,extension=''):
+def readGazeboSyntheticInfo(path,eval,extension='', init_random=False):
     print("Reading Training Transforms")
     train_cam_infos = readCamerasFromTransforms(path, "transforms.json", True, extension)
     
@@ -279,7 +280,7 @@ def readGazeboSyntheticInfo(path,eval,extension=''):
 
     # pointing to point cloud
     ply_path = os.path.join(path, "lidar/lidar_points_world.ply")
-    if not os.path.exists(ply_path):
+    if init_random or not os.path.exists(ply_path):
         # If this data set has no colmap data, and no
         # lidar points, we start with random points
         num_pts = 100_000
@@ -291,10 +292,11 @@ def readGazeboSyntheticInfo(path,eval,extension=''):
         pcd = BasicPointCloud(points=xyz, colors=SH2RGB(shs), normals=np.zeros((num_pts, 3)))
 
         storePly(ply_path, xyz, SH2RGB(shs) * 255)
-    try:
-        pcd = fetchPly_BW(ply_path)
-    except:
-        pcd = None
+    else:
+        try:
+            pcd = fetchPly_BW(ply_path)
+        except:
+            pcd = None
 
     scene_info = SceneInfo(point_cloud=pcd,
                            train_cameras=train_cam_infos,
