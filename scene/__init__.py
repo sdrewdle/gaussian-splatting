@@ -22,7 +22,13 @@ class Scene:
 
     gaussians : GaussianModel
 
-    def __init__(self, args : ModelParams, gaussians : GaussianModel, load_iteration=None, shuffle=True, resolution_scales=[1.0]):
+    def __init__(self, 
+                 args : ModelParams, 
+                 gaussians : GaussianModel, 
+                 load_iteration=None, 
+                 shuffle=True, 
+                 resolution_scales=[1.0],
+                 init_gaussians_random = False):
         """b
         :param path: Path to colmap scene main folder.
         """
@@ -50,7 +56,7 @@ class Scene:
             print("Found transforms.json file, assuming Gazebo data set!")
             scene_info = sceneLoadTypeCallbacks["Gazebo"](args.source_path, 
                                                           args.eval, 
-                                                          init_random = args.init_gaussians_random)
+                                                          init_random = init_gaussians_random)
         else:
             assert False, "Could not recognize scene type."
 
